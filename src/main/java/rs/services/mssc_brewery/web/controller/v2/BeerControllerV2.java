@@ -30,51 +30,41 @@ import rs.services.mssc_brewery.web.model.v2.BeerDtoV2;
 @RestController
 public class BeerControllerV2 {
 
-	private final BeerServiceV2 beerService;
-	
-	public BeerControllerV2(BeerServiceV2 beerService) {
-		this.beerService = beerService;
-	}
-	
-	@GetMapping({"{beerId}"})
-	public ResponseEntity<BeerDtoV2> getBeer(@NotNull @PathVariable UUID beerId){
-		return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
-	}
-	
-	@PostMapping
-	public ResponseEntity handlePost(@Valid @NotNull @RequestBody BeerDtoV2 beerDto) {
-		
-		BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
-		HttpHeaders headers = new HttpHeaders();
-		//TO DO add host name to URL
-		headers.add("Location", "/api/v1/beer/" + savedDto.getId().toString());
-		
-		return new ResponseEntity<>(headers, HttpStatus.CREATED);
-	}
-	
-	@PutMapping({"{beerId}"})
-	public ResponseEntity handleUpdate(@PathVariable UUID beerId, @Valid @RequestBody BeerDtoV2 beerDto) {
-		
-		beerService.updateBeer(beerId, beerDto);
-		
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-	
-	@DeleteMapping({"{beerId}"})
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteBeer(@PathVariable UUID beerId) {
-		
-		beerService.deleteBeer(beerId);
-	}
-	
-	@ExceptionHandler(ConstraintViolationException.class)
-	public ResponseEntity<List<String>> validationErrorHandler(ConstraintViolationException e){
-	    List<String> errors = new ArrayList<>(e.getConstraintViolations().size());
-	    
-	    e.getConstraintViolations().forEach(constraintViolations -> {
-		errors.add(constraintViolations.getPropertyPath() + " : " + constraintViolations.getMessage());
-	    });
-	    
-	    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-	}
+    private final BeerServiceV2 beerService;
+
+    public BeerControllerV2(BeerServiceV2 beerService) {
+	this.beerService = beerService;
+    }
+
+    @GetMapping({"{beerId}"})
+    public ResponseEntity<BeerDtoV2> getBeer(@NotNull @PathVariable UUID beerId){
+	return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity handlePost(@Valid @NotNull @RequestBody BeerDtoV2 beerDto) {
+
+	BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
+	HttpHeaders headers = new HttpHeaders();
+	//TO DO add host name to URL
+	headers.add("Location", "/api/v1/beer/" + savedDto.getId().toString());
+
+	return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @PutMapping({"{beerId}"})
+    public ResponseEntity handleUpdate(@PathVariable UUID beerId, @Valid @RequestBody BeerDtoV2 beerDto) {
+
+	beerService.updateBeer(beerId, beerDto);
+
+	return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping({"{beerId}"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBeer(@PathVariable UUID beerId) {
+
+	beerService.deleteBeer(beerId);
+    }
+
 }
