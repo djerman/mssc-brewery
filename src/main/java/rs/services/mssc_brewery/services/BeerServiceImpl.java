@@ -4,9 +4,11 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import rs.services.mssc_brewery.web.model.BeerDto;
 
 @Service
+@Slf4j
 public class BeerServiceImpl implements BeerService{
 
 	@Override
@@ -28,6 +30,12 @@ public class BeerServiceImpl implements BeerService{
 	public void updateBeer(UUID beerId, BeerDto beerDto) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void deleteBeer(UUID beerId) {
+		// TODO Auto-generated method stub
+		log.debug("Deleting beer ...");
 	}
 
 }

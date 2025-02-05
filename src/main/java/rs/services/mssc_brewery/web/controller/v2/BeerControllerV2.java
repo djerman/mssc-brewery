@@ -1,4 +1,4 @@
-package rs.services.mssc_brewery.web.controller;
+package rs.services.mssc_brewery.web.controller.v2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,45 +21,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
-import rs.services.mssc_brewery.services.CustomerService;
-import rs.services.mssc_brewery.web.model.CustomerDto;
+import jakarta.validation.constraints.NotNull;
+import rs.services.mssc_brewery.services.v2.BeerServiceV2;
+import rs.services.mssc_brewery.web.model.v2.BeerDtoV2;
 
-@RequestMapping("/api/v1/customer/")
+@Validated
+@RequestMapping("/api/v2/beer/")
 @RestController
-public class CustomerController {
+public class BeerControllerV2 {
 
-	private final CustomerService customerService;
+	private final BeerServiceV2 beerService;
 	
-	public CustomerController(CustomerService customerService) {
-		this.customerService = customerService;
+	public BeerControllerV2(BeerServiceV2 beerService) {
+		this.beerService = beerService;
 	}
 	
-	@GetMapping("{customerId}")
-	public ResponseEntity<CustomerDto> getCustomer(@PathVariable UUID customerId){
-		return new ResponseEntity<CustomerDto>(customerService.getCustomerById(customerId), HttpStatus.OK);
+	@GetMapping({"{beerId}"})
+	public ResponseEntity<BeerDtoV2> getBeer(@NotNull @PathVariable UUID beerId){
+		return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity handlePost(@Valid @RequestBody CustomerDto customerDto) {
-		CustomerDto savedDto = customerService.saveNewCustomer(customerDto);
+	public ResponseEntity handlePost(@Valid @NotNull @RequestBody BeerDtoV2 beerDto) {
+		
+		BeerDtoV2 savedDto = beerService.saveNewBeer(beerDto);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Location", "/api/v1/customer" + savedDto.getId().toString());
+		//TO DO add host name to URL
+		headers.add("Location", "/api/v1/beer/" + savedDto.getId().toString());
 		
 		return new ResponseEntity<>(headers, HttpStatus.CREATED);
 	}
 	
-	@PutMapping("{customerId}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void handleUpdate(@PathVariable UUID customerId, @RequestBody @Valid CustomerDto customerDto) {
+	@PutMapping({"{beerId}"})
+	public ResponseEntity handleUpdate(@PathVariable UUID beerId, @Valid @RequestBody BeerDtoV2 beerDto) {
 		
-		customerService.updateCustomer(customerId, customerDto);
+		beerService.updateBeer(beerId, beerDto);
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@DeleteMapping("{customerId}")
+	@DeleteMapping({"{beerId}"})
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void handleDelete(@PathVariable UUID customerId) {
+	public void deleteBeer(@PathVariable UUID beerId) {
 		
-		customerService.deleteCustomer(customerId);
+		beerService.deleteBeer(beerId);
 	}
 	
 	@ExceptionHandler(ConstraintViolationException.class)

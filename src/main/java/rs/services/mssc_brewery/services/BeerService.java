@@ -6,9 +6,11 @@ import rs.services.mssc_brewery.web.model.BeerDto;
 
 public interface BeerService {
 
-	BeerDto getBeerById(UUID beerId);
-	
-	BeerDto saveNewBeer(BeerDto beerDto);
-	
-	void updateBeer(UUID beerId, BeerDto beerDto);
+    BeerDto getBeerById(UUID beerId);
+
+    BeerDto saveNewBeer(BeerDto beerDto);
+
+    void updateBeer(UUID beerId, BeerDto beerDto);
+
+    void deleteBeer(UUID beerId);
 }
