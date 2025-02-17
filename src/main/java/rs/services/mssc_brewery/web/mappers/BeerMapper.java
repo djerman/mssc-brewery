@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import rs.services.mssc_brewery.domain.Beer;
 import rs.services.mssc_brewery.web.model.BeerDto;
 
-@Mapper
+@Mapper(uses = DateMapper.class)
 public interface BeerMapper {
 
     BeerDto beerToBeerDto(Beer beer);

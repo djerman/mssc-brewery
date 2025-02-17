@@ -1,5 +1,6 @@
 package rs.services.mssc_brewery.domain;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -17,4 +18,7 @@ public class Beer {
     private String beerName;
     private BeerStyleEnum beerStyle;
     private Long upc;
+    
+    private Timestamp createDate;
+    private Timestamp lastUpdate;
 }
